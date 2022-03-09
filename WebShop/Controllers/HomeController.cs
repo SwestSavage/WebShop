@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WebShop.DbRepository.Interfaces;
 using WebShop.Models;
 
 namespace WebShop.Controllers
@@ -7,15 +8,18 @@ namespace WebShop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private IProductsRepository _productsRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IProductsRepository productsRepository)
         {
             _logger = logger;
+            _productsRepository = productsRepository;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var products = _productsRepository.GetAll();
+            return View(products);
         }
 
         public IActionResult Privacy()
