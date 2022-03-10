@@ -9,6 +9,16 @@ namespace WebShop.DbRepository.Implementations
         {
         }
 
+        public async Task AddAsync(User user)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                await context.Users.AddAsync(user);
+
+                await context.SaveChangesAsync();
+            }
+        }
+
         public IEnumerable<User> GetAll()
         {
             IEnumerable<User> users = null;
@@ -22,6 +32,36 @@ namespace WebShop.DbRepository.Implementations
             }
 
             return users;
+        }
+
+        public User GetById(int id)
+        {
+            User user = null;
+
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                if (context.Users.Any())
+                {
+                    user = context.Users.FirstOrDefault(u => u.Id == id);
+                }
+            }
+
+            return user;
+        }
+
+        public User GetByLogin(string login)
+        {
+            User user = null;
+
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                if (context.Users.Any())
+                {
+                    user = context.Users.FirstOrDefault(u => u.Login == login);
+                }
+            }
+
+            return user;
         }
     }
 }

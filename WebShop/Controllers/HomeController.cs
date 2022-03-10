@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebShop.DbRepository.Interfaces;
 using WebShop.Models;
@@ -16,9 +17,11 @@ namespace WebShop.Controllers
             _productsRepository = productsRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = _productsRepository.GetAll();
+            ViewData["LoggedIn"] = Convert.ToString(User.Identity.Name);
+
+            var products = await _productsRepository.GetAllFromStorageAsync();
             return View(products);
         }
 
@@ -31,6 +34,12 @@ namespace WebShop.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public IActionResult TestUser()
+        {
+            return Content(User.Identity.Name);
         }
     }
 }

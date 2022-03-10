@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebShop.DbRepository;
 using WebShop.DbRepository.Implementations;
@@ -10,6 +11,12 @@ var config = new ConfigurationBuilder()
     .Build();
 
 // Add services to the container.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = new PathString("/Account/Login");
+    });
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
@@ -39,6 +46,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
