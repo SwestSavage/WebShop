@@ -9,36 +9,27 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th>Product Id</th>
-                <th>Color</th>
-                <th>Brand</th>
-                <th>Type</th>
-                <th>Model</th>
-                <th>Desc</th>
-                <th>Price</th>
-                <th>Size</th>
-                <th>Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var p in Model)
-            {
-                <tr>
-                    <td>@p.Product.Id</td>
-                    <td>@p.Product.Color.Color</td>
-                    <td>@p.Product.Brand.Title</td>
-                    <td>@p.Product.Type.Title</td>
-                    <td>@p.Product.Model</td>
-                    <td>@p.Product.Description</td>
-                    <td>@p.Product.Price</td>
-                    <td>@p.Size</td>
-                    <td>@p.Count</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+
+    <div class="row">
+        @foreach (var p in Model)
+        {
+            <div class="col-sm-3">
+                <div class="card bg-light"  style="width: 16rem; margin: 10px">
+                <div class="card-body text-center">
+                    <h4 class="card-title">@p.Product.Type.Title - @p.Product.Model</h4>
+                    <h5 class="card-subtitle mb-2 text-muted">@p.Product.Brand.Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@p.Product.Color.Color</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Размер: @p.Size</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Цена: @p.Product.Price</h6>
+                    <p class="card-text">@p.Product.Description</p>
+                    @if (ViewData["LoggedIn"] is not null)
+                    {
+                        <a href="#" class="btn btn-primary">Купить</a>
+                    }
+                </div>
+            </div>
+            </div>
+        }
+        
+    </div>
+
