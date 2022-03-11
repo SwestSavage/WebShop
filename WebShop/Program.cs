@@ -17,6 +17,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = new PathString("/Account/Login");
     });
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
@@ -31,6 +34,16 @@ builder.Services.AddScoped<IProductsRepository>(
     provider.GetService<IRepositoryContextFactory>())
     );
 
+builder.Services.AddScoped<ICartRepository>(
+    provider => new CartRepository(config.GetConnectionString("DefaultConnection"),
+    provider.GetService<IRepositoryContextFactory>())
+    );
+
+builder.Services.AddScoped<IStorageRepository>(
+    provider => new StorageRepository(config.GetConnectionString("DefaultConnection"),
+    provider.GetService<IRepositoryContextFactory>())
+    );
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,6 +53,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSession();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

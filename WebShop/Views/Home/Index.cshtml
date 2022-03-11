@@ -23,8 +23,12 @@
                     <h6 class="card-subtitle mb-2 text-muted">Цена: @p.Product.Price</h6>
                     <p class="card-text">@p.Product.Description</p>
                     @if (ViewData["LoggedIn"] is not null)
-                    {
-                        <a href="#" class="btn btn-primary">Купить</a>
+                    {                        
+                        @using(Html.BeginForm("AddToCart", "Home", FormMethod.Get))
+                        {
+                            <input type="hidden" name="storageId" value="@p.Storage.Id"/>
+                            <input type="submit" class="btn btn-primary" value="Купить"/>
+                        }
                     }
                 </div>
             </div>

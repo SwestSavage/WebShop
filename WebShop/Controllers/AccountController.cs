@@ -5,6 +5,7 @@ using System.Security.Claims;
 using WebShop.DbRepository.Interfaces;
 using WebShop.Models;
 using WebShop.Models.ViewModels;
+using WebShop.Extensions;
 
 namespace WebShop.Controllers
 {
@@ -33,9 +34,11 @@ namespace WebShop.Controllers
                 
                 if (user is not null && user.Password == model.Password)
                 {
-                    await Authenticate(model.Login); 
+                    await Authenticate(model.Login);
 
-                    return RedirectToAction("Index", "Home");
+                    HttpContext.Session.SetObject("user", user);
+
+                    return RedirectToAction("Index", "Home", user);
                 }
 
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");

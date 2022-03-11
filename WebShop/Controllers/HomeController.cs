@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebShop.DbRepository.Interfaces;
 using WebShop.Models;
+using WebShop.Models.ViewModels;
+using WebShop.Extensions;
 
 namespace WebShop.Controllers
 {
@@ -10,24 +12,61 @@ namespace WebShop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private IProductsRepository _productsRepository;
+        private ICartRepository _cartRepository;
+        private IStorageRepository _storageRepository;
+        private IUserRepository _userRepository;
 
-        public HomeController(ILogger<HomeController> logger, IProductsRepository productsRepository)
+        private List<Product> _products = new();
+
+        public HomeController(ILogger<HomeController> logger, 
+            IProductsRepository productsRepository,
+            ICartRepository cartRepository,
+            IStorageRepository storageRepository,
+            IUserRepository userRepository)
         {
             _logger = logger;
             _productsRepository = productsRepository;
+            _cartRepository = cartRepository;
+            _storageRepository = storageRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(User user = null)
         {
             ViewData["LoggedIn"] = Convert.ToString(User.Identity.Name);
+            
+            if (user is not null && user.Id != 0)
+            {
+                Cart cart = _cartRepository.GetByUserId(user.Id);
+
+                ViewBag.ItemsInCart = cart.ProductsFromStorage.Count();
+            }
 
             var products = await _productsRepository.GetAllFromStorageAsync();
             return View(products);
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> AddToCart(int storageId)
         {
-            return View();
+            var storage = _storageRepository.GetById(storageId);
+            User user = HttpContext.Session.GetObject<User>("user");
+
+            if (storage is not null)
+            {              
+                await _cartRepository.AddToCartAsync(storage, user);              
+            }
+
+            return RedirectToAction("Index", user);
+        }
+
+        [Authorize]
+        public IActionResult GoToCart()
+        {
+            User user = HttpContext.Session.GetObject<User>("user");
+
+            return RedirectToAction("Cart", "Cart");      
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -41,5 +80,6 @@ namespace WebShop.Controllers
         {
             return Content(User.Identity.Name);
         }
+
     }
 }

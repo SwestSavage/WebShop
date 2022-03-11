@@ -50,6 +50,7 @@ namespace WebShop.DbRepository.Implementations
                     {
                         result.Add(new ProductFromStorageViewModel
                         {
+                            Storage = item,
                             Product = item.Product,
                             Count = item.Count,
                             Size = item.Size
@@ -59,6 +60,18 @@ namespace WebShop.DbRepository.Implementations
 
                 return result;
             }
+        }
+
+        public Product GetById(int id)
+        {
+            Product result = null;
+
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                result = context.Products.FirstOrDefault(p => p.Id == id);
+            }
+
+            return result;
         }
     }
 }
