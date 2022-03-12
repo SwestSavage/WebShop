@@ -26,13 +26,15 @@ namespace WebShop.DbRepository.Implementations
                             .Include(s => s.Product.Color)
                             .Include(s => s.Product.Type)
                             .FirstOrDefault(s => s.Id == storage.Id));
+
+                        existingCart.Count = existingCart.ProductsFromStorage.Count;
                     }
                 }
                 else
                 {
                     Cart cart = new Cart
                     {
-                        Count = 1,
+                        Count = 0,
                         User = context.Users.FirstOrDefault(u => u.Id == user.Id),
                         Sum = storage.Product.Price,
                     };                   
@@ -43,6 +45,8 @@ namespace WebShop.DbRepository.Implementations
                         .Include(s => s.Product.Color)
                         .Include(s => s.Product.Type)
                         .FirstOrDefault(s => s.Id == storage.Id));
+
+                    cart.Count = cart.ProductsFromStorage.Count;
 
                     await context.Carts.AddAsync(cart);
                 }
@@ -58,12 +62,41 @@ namespace WebShop.DbRepository.Implementations
             using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
             {
                 cart = context.Carts
+                    .Include(c => c.User)
                     .Include(c => c.ProductsFromStorage)
-                    .Include(c => c.ProductsFromStorage.Select(p => p.Product))
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Brand)
+                     .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Type)
+                    .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Type)
+                    .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Color)
                     .FirstOrDefault(c => c.User.Id == userId);
             }
 
             return cart;
+        }
+
+        public async Task RemoveFromCartAsync(int storageId, int userId)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                var cart = await context.Carts
+                    .Include(c => c.ProductsFromStorage)
+                    .FirstOrDefaultAsync(c => c.User.Id == userId);
+                var stor = await context.Storage.FirstOrDefaultAsync(s => s.Id == storageId);
+
+                if (cart is not null && stor is not null)
+                {
+                    cart.ProductsFromStorage.Remove(stor);
+                }
+
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

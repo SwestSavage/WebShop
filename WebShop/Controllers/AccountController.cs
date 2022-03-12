@@ -38,7 +38,7 @@ namespace WebShop.Controllers
 
                     HttpContext.Session.SetObject("user", user);
 
-                    return RedirectToAction("Index", "Home", user);
+                    return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");

@@ -7,5 +7,7 @@ namespace WebShop.DbRepository.Interfaces
         public Task AddToCartAsync(Storage storage, User user);
 
         public Cart GetByUserId(int userId);
+
+        public Task RemoveFromCartAsync(int storageId, int userId);
     }
 }

@@ -3,9 +3,10 @@
 *@
 @model IEnumerable<WebShop.Models.Storage>
 @{
+    decimal fullPrice = 0;
 }
 
-<h1>Корзина</h1>
+<h1>Корзина - @ViewBag.User.FirstName</h1>
 
 <div>
     <table>
@@ -18,11 +19,20 @@
         <tbody>
             @foreach (var p in Model)
             {
+                fullPrice += p.Product.Price;
                 <tr>
-                    <td>@p.Product.Type - @p.Product.Model</td>
+                    <td>@p.Product.Type.Title - @p.Product.Model</td>
                     <td>@p.Product.Price</td>
+                    <td>
+                        @using (Html.BeginForm("RemoveFromCart", "Cart", FormMethod.Get))
+                        {
+                            <input type="hidden" name="storageId" value="@p.Id" />
+                            <input type="submit" value="Убрать"/>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+    <h3>Full Price: @fullPrice</h3>
 </div>

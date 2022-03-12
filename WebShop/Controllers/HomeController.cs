@@ -31,10 +31,11 @@ namespace WebShop.Controllers
             _userRepository = userRepository;
         }
 
-        public async Task<IActionResult> Index(User user = null)
+        public async Task<IActionResult> Index()
         {
             ViewData["LoggedIn"] = Convert.ToString(User.Identity.Name);
-            
+            User user = HttpContext.Session.GetObject<User>("user");
+
             if (user is not null && user.Id != 0)
             {
                 Cart cart = _cartRepository.GetByUserId(user.Id);
