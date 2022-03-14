@@ -14,10 +14,12 @@ namespace WebShop.Controllers
         private IStorageRepository _storageRepository;
 
         public AdminController(IProductsRepository productsRepository,
-            IProductInfoRepository productInfoRepository)
+            IProductInfoRepository productInfoRepository,
+            IStorageRepository storageRepository)
         { 
             _productsRepository = productsRepository;
             _productInfoRepository = productInfoRepository;
+            _storageRepository = storageRepository;
         }
 
         [Authorize]
