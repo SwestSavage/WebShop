@@ -29,7 +29,7 @@ namespace WebShop.Controllers
             {
                 ViewBag.ItemsInCart = cart.ProductsFromStorage.Count();
 
-                return View(cart.ProductsFromStorage);
+                return View(cart);
             }
 
             return BadRequest();
@@ -49,6 +49,19 @@ namespace WebShop.Controllers
             }
 
             return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOrder(int cartId, decimal fullSum)
+        {
+            User user = HttpContext.Session.GetObject<User>("user")
+                ;
+            await _cartRepository.AddOrderAsync(cartId, fullSum);
+
+            await _cartRepository.AddNewCartOfUser(user.Id);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

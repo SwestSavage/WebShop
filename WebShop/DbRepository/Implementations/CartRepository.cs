@@ -10,13 +10,70 @@ namespace WebShop.DbRepository.Implementations
         {
         }
 
+        public async Task AddNewCartOfUser(int userId)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (user is not null)
+                {
+                    await context.Carts.AddAsync(new Cart
+                    {
+                        Count = 0,
+                        User = user,
+                        Sum = 0,
+                    });
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddOrderAsync(int cartId, decimal fullSum)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                var cart = await context.Carts
+                    .Include(c => c.User)
+                    .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Brand)
+                     .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Type)
+                    .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Type)
+                    .Include(c => c.ProductsFromStorage)
+                        .ThenInclude(p => p.Product)
+                            .ThenInclude(p => p.Color)
+                    .FirstOrDefaultAsync(c => c.Id == cartId);
+
+                if (cart is not null)
+                {
+                    await context.Orders.AddAsync(new Order
+                    {
+                        Date = DateTime.Now,
+                        Count = cart.ProductsFromStorage.Count(),
+                        FullSum = fullSum,
+                        Cart = cart
+                    });
+                }
+
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task AddToCartAsync(Storage storage, User user)
         {
             using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
             {
                 if (context.Carts.Any())
                 {
-                    var existingCart = context.Carts.FirstOrDefault(c => c.User.Id == user.Id);
+                    var existingCart = context.Carts
+                        .OrderBy(c => c.Id)
+                        .LastOrDefault(c => c.User.Id == user.Id);
 
                     if (existingCart is not null)
                     {
@@ -75,7 +132,8 @@ namespace WebShop.DbRepository.Implementations
                     .Include(c => c.ProductsFromStorage)
                         .ThenInclude(p => p.Product)
                             .ThenInclude(p => p.Color)
-                    .FirstOrDefault(c => c.User.Id == userId);
+                    .OrderBy(c => c.Id)
+                    .LastOrDefault(c => c.User.Id == userId);
             }
 
             return cart;
@@ -87,7 +145,8 @@ namespace WebShop.DbRepository.Implementations
             {
                 var cart = await context.Carts
                     .Include(c => c.ProductsFromStorage)
-                    .FirstOrDefaultAsync(c => c.User.Id == userId);
+                    .OrderBy(c => c.Id)
+                    .LastOrDefaultAsync(c => c.User.Id == userId);
                 var stor = await context.Storage.FirstOrDefaultAsync(s => s.Id == storageId);
 
                 if (cart is not null && stor is not null)

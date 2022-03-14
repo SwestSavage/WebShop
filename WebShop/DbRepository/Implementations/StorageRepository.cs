@@ -26,5 +26,24 @@ namespace WebShop.DbRepository.Implementations
 
             return storage;
         }
+
+        public void AddProductInStorage(Product product, Storage storage)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                context.Products.Add(product);
+
+                context.SaveChanges();
+
+                context.Storage.Add(new Storage
+                {
+                    Product = context.Products.Last(),
+                    Size = storage.Size,
+                    Count = storage.Count
+                });
+
+                context.SaveChanges();
+            }
+        }
     }
 }

@@ -44,6 +44,11 @@ builder.Services.AddScoped<IStorageRepository>(
     provider.GetService<IRepositoryContextFactory>())
     );
 
+builder.Services.AddScoped<IProductInfoRepository>(
+    provider => new ProductInfoRepository(config.GetConnectionString("DefaultConnection"),
+    provider.GetService<IRepositoryContextFactory>())
+    );
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

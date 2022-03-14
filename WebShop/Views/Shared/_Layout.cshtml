@@ -27,9 +27,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Cart">Корзина - @ViewBag.ItemsInCart</a>
-                            </li>
+                            @if (ViewBag.IsAdmin is null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Cart">Корзина - @ViewBag.ItemsInCart</a>
+                                </li>
+                            }
                         }
                         else
                         {

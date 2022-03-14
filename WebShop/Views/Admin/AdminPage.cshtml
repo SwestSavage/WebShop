@@ -1,0 +1,45 @@
+﻿@model IEnumerable<WebShop.Models.ViewModels.ProductFromStorageViewModel>
+
+@{
+ 
+}
+
+<h1>Admin Page: @ViewBag.IsAdmin</h1>
+
+<div class="row">
+    @foreach (var p in Model)
+    {
+        <div class="col-sm-3">
+            <div class="card bg-light"  style="width: 16rem; margin: 10px">
+                <div class="card-body text-center">
+                    <h4 class="card-title">@p.Product.Type.Title - @p.Product.Model</h4>
+                    <h5 class="card-subtitle mb-2 text-muted">@p.Product.Brand.Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@p.Product.Color.Color</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Размер: @p.Size</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Цена: @p.Product.Price</h6>
+                    <p class="card-text">@p.Product.Description</p>
+                    @if (ViewData["LoggedIn"] is not null && ViewBag.IsAdmin)
+                    {                        
+                        @using(Html.BeginForm("DeleteProduct", "Admin", FormMethod.Post))
+                        {
+                            <input type="hidden" name="storageId" value="@p.Storage.Id"/>
+                            <input type="submit" class="btn btn-primary" value="Удалить"/>
+                        }
+                        @using(Html.BeginForm("UpdateProduct", "Admin", FormMethod.Get))
+                        {
+                            <input type="hidden" name="storageId" value="@p.Storage.Id"/>
+                            <input type="submit" class="btn btn-primary" value="Изменить"/>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-sm-3">
+        @using(Html.BeginForm("AddProduct", "Admin", FormMethod.Get))
+        {
+            <input type="submit" class="btn btn-primary" style="margin-top: 50px;" value="Добавить продукт"/>
+        }
+    </div>
+        
+</div>

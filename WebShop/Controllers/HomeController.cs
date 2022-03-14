@@ -40,12 +40,22 @@ namespace WebShop.Controllers
             {
                 Cart cart = _cartRepository.GetByUserId(user.Id);
 
-                ViewBag.ItemsInCart = cart.ProductsFromStorage.Count();
+                if (cart is not null)
+                {
+                    ViewBag.ItemsInCart = cart.ProductsFromStorage.Count();
+                }
+
+                if (user.IsAdmin)
+                {                   
+                    return RedirectToAction("AdminPage", "Admin");
+                }
             }
 
             var products = await _productsRepository.GetAllFromStorageAsync();
             return View(products);
         }
+
+        
 
         [HttpGet]
         [Authorize]
