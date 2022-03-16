@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebShop.Models.ViewModels.ProductFromStorageViewModel>
+﻿@model IEnumerable<WebShop.Models.Storage>
 
 @{
  
@@ -22,12 +22,12 @@
                     {                        
                         @using(Html.BeginForm("DeleteProduct", "Admin", FormMethod.Post))
                         {
-                            <input type="hidden" name="storageId" value="@p.Storage.Id"/>
+                            <input type="hidden" name="storageId" value="@p.Id"/>
                             <input type="submit" class="btn btn-primary" value="Удалить"/>
                         }
                         @using(Html.BeginForm("UpdateProduct", "Admin", FormMethod.Get))
                         {
-                            <input type="hidden" name="storageId" value="@p.Storage.Id"/>
+                            <input type="hidden" name="storageId" value="@p.Id"/>
                             <input type="submit" class="btn btn-primary" value="Изменить"/>
                         }
                     }

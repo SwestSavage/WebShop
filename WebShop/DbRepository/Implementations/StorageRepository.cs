@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebShop.DbRepository.Interfaces;
 using WebShop.Models;
+using WebShop.Models.ViewModels;
 
 namespace WebShop.DbRepository.Implementations
 {
@@ -27,19 +28,27 @@ namespace WebShop.DbRepository.Implementations
             return storage;
         }
 
-        public void AddProductInStorage(Product product, Storage storage)
+        public void AddProductInStorage(ProductFromStorageViewModel model)
         {
             using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
             {
-                context.Products.Add(product);
+                context.Products.Add(new Product
+                {
+                    Brand = context.Brands.FirstOrDefault(b => b.Id == model.BrandId),
+                    Type = context.ProductTypes.FirstOrDefault(p => p.Id == model.TypeId),
+                    Color = context.ProductColors.FirstOrDefault(c => c.Id == model.ColorId),
+                    Model = model.ProductModel,
+                    Description = model.ProductDesc,
+                    Price = model.Price
+                }) ;
 
                 context.SaveChanges();
 
                 context.Storage.Add(new Storage
                 {
-                    Product = context.Products.Last(),
-                    Size = storage.Size,
-                    Count = storage.Count
+                    Product = context.Products.OrderBy(p => p.Id).Last(),
+                    Size = model.Size,
+                    Count = model.Count
                 });
 
                 context.SaveChanges();

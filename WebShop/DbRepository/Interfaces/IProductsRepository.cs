@@ -9,6 +9,6 @@ namespace WebShop.DbRepository.Interfaces
 
         public IEnumerable<Product> GetAll();
 
-        public Task<IEnumerable<ProductFromStorageViewModel>> GetAllFromStorageAsync();
+        public Task<IEnumerable<Storage>> GetAllFromStorageAsync();
     }
 }

@@ -31,31 +31,20 @@ namespace WebShop.DbRepository.Implementations
             return products;
         }
 
-        public async Task<IEnumerable<ProductFromStorageViewModel>> GetAllFromStorageAsync()
+        public async Task<IEnumerable<Storage>> GetAllFromStorageAsync()
         {
-            List<ProductFromStorageViewModel> result = new List<ProductFromStorageViewModel>();
+            List<Storage> result = null;
 
             using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
             {
                 if (context.Storage.Any())
                 {
-                    var storage = await context.Storage
+                    result = await context.Storage
                         .Include(s => s.Product)
                         .Include(s => s.Product.Brand)
                         .Include(s => s.Product.Color)
                         .Include(s => s.Product.Type)
                         .ToListAsync();
-
-                    foreach (var item in storage)
-                    {
-                        result.Add(new ProductFromStorageViewModel
-                        {
-                            Storage = item,
-                            Product = item.Product,
-                            Count = item.Count,
-                            Size = item.Size
-                        });
-                    }
                 }
 
                 return result;

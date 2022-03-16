@@ -1,5 +1,70 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model WebShop.Models.ViewModels.ProductFromStorageViewModel
+
 @{
 }
+
+<form asp-action="AddProduct" asp-controller="Admin" method="post">
+    <div>
+        <div>
+            <label asp-for="ProductModel">Введите модель</label><br />
+            <input type="text" asp-for="ProductModel" />
+            <span asp-validation-for="ProductModel" />
+        </div>
+        <div>
+            <label asp-for="ColorId">Выберите цвет</label><br />
+            <select asp-for="ColorId">
+                @foreach (var c in ViewBag.Colors)
+                {
+                    <option value="@c.Id">@c.Color</option>
+                }
+            </select>
+            <span asp-validation-for="ColorId" />
+        </div>
+        <div>
+            <label asp-for="TypeId">Выберите тип продукта</label><br />
+            <select asp-for="TypeId">
+                @foreach (var t in ViewBag.Types)
+                {
+                    <option value="@t.Id">@t.Title</option>
+                }
+            </select>
+            <span asp-validation-for="TypeId" />
+        </div>
+        <div>
+            <label asp-for="BrandId">Выберите бренд</label><br />
+            <select asp-for="BrandId">
+                @foreach (var b in ViewBag.Brands)
+                {
+                    <option value="@b.Id">@b.Title</option>
+                }
+            </select>
+            <span asp-validation-for="BrandId" />
+        </div>
+        <div>
+            <label asp-for="ProductDesc">Введите описание</label><br />
+            <input type="text" asp-for="ProductDesc" />
+            <span asp-validation-for="ProductDesc" />
+        </div>
+        <div>
+            <label asp-for="Price">Введите цену</label><br />
+            <input type="number" asp-for="Price" />
+            <span asp-validation-for="Price" />
+        </div>
+        <div>
+            <label asp-for="Size">Введите размер</label><br />
+            <input type="text" asp-for="Size" />
+            <span asp-validation-for="Size" />
+        </div>
+        <div>
+            <label asp-for="Count">Введите количество</label><br />
+            <input type="text" asp-for="Count" />
+            <span asp-validation-for="Count" />
+        </div>
+        <div>
+                <input type="submit" value="Создать" class="btn btn-outline-dark"/>
+        </div>
+    </div>
+
+</form>
+
+

@@ -47,6 +47,10 @@ namespace WebShop.Controllers
         [HttpGet]
         public ActionResult AddProduct()
         {
+            ViewBag.Colors = _productInfoRepository.GetProductsColors();
+            ViewBag.Types = _productInfoRepository.GetProductTypes();
+            ViewBag.Brands = _productInfoRepository.GetBrands();
+
             return View();
         }
         
@@ -54,16 +58,9 @@ namespace WebShop.Controllers
         [HttpPost]
         public ActionResult AddProduct(ProductFromStorageViewModel productStorage)
         {
-            if (ModelState.IsValid)
-            {
-                _storageRepository.AddProductInStorage(productStorage.Product, productStorage.Storage);
+            _storageRepository.AddProductInStorage(productStorage);
 
-                return RedirectToAction("AdminPage", "Admin");
-            }
-
-            ModelState.AddModelError("", "Некорректные данные");
-
-            return View(productStorage);
+            return RedirectToAction("AdminPage", "Admin");
         }
     }
 }

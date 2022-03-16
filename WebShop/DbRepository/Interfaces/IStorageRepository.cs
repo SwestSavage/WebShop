@@ -1,4 +1,5 @@
 ﻿using WebShop.Models;
+using WebShop.Models.ViewModels;
 
 namespace WebShop.DbRepository.Interfaces
 {
@@ -6,6 +7,6 @@ namespace WebShop.DbRepository.Interfaces
     {
         public Storage GetById(int id);
 
-        public void AddProductInStorage(Product product, Storage storage);
+        public void AddProductInStorage(ProductFromStorageViewModel model);
     }
 }
