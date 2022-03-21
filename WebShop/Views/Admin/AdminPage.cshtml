@@ -9,7 +9,9 @@
 </div>
 
 <div class="row">
-    @foreach (var p in Model)
+    @if(Model is not null)
+    {
+                @foreach (var p in Model)
     {
         <div class="col-sm-3">
             <div class="card bg-light"  style="width: 16rem; margin: 10px">
@@ -37,6 +39,7 @@
                 </div>
             </div>
         </div>
+    }
     }
     <div class="col-sm-3">
         @using(Html.BeginForm("AddProduct", "Admin", FormMethod.Get))

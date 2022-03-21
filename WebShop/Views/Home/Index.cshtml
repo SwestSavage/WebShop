@@ -10,6 +10,8 @@
 
 
     <div class="row">
+        @if (Model is not null)
+    {
         @foreach (var p in Model)
         {
             <div class="col-sm-3">
@@ -41,6 +43,7 @@
             </div>
             </div>
         }
-        
+    }
+
     </div>
 
