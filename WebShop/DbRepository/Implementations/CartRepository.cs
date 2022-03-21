@@ -50,6 +50,14 @@ namespace WebShop.DbRepository.Implementations
                             .ThenInclude(p => p.Color)
                     .FirstOrDefaultAsync(c => c.Id == cartId);
 
+                cart.ProductsFromStorage.ForEach(p =>
+                {
+                    if (p.Count > 0)
+                    {
+                        p.Count--;
+                    }
+                });
+
                 if (cart is not null)
                 {
                     await context.Orders.AddAsync(new Order

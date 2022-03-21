@@ -62,5 +62,49 @@ namespace WebShop.Controllers
 
             return RedirectToAction("AdminPage", "Admin");
         }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult UpdateProduct(int storageId)
+        {
+            ViewBag.Colors = _productInfoRepository.GetProductsColors();
+            ViewBag.Types = _productInfoRepository.GetProductTypes();
+            ViewBag.Brands = _productInfoRepository.GetBrands();
+
+            var storage = _storageRepository.GetById(storageId);
+
+            var model = new ProductFromStorageViewModel
+            {
+                StorageId = storageId,
+                ProductModel = storage.Product.Model,
+                BrandId = storage.Product.Brand.Id,
+                ColorId = storage.Product.Color.Id,
+                TypeId = storage.Product.Type.Id,
+                ProductDesc = storage.Product.Description,
+                Price = storage.Product.Price,
+                Size = storage.Size,
+                Count = storage.Count
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult UpdateProduct(ProductFromStorageViewModel model)
+        {
+            _storageRepository.UpdateProductInStorage(model);
+
+            return RedirectToAction("AdminPage", "Admin");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult DeleteProduct(int storageId)
+        {
+            _storageRepository.DeleteProductInStorage(storageId);
+
+            return RedirectToAction("AdminPage", "Admin");
+        }
     }
 }

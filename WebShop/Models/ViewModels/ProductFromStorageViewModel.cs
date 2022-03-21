@@ -2,6 +2,7 @@
 {
     public class ProductFromStorageViewModel
     {
+        public int StorageId { get; set; }
         public string ProductModel { get; set; }
         public int BrandId { get; set; }
         public int ColorId { get; set; }

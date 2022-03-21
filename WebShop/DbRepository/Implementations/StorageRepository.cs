@@ -54,5 +54,68 @@ namespace WebShop.DbRepository.Implementations
                 context.SaveChanges();
             }
         }
+
+        public void UpdateProductInStorage(ProductFromStorageViewModel model)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                var storage = context.Storage
+                    .Include(s => s.Product)
+                    .Include(s => s.Product.Brand)
+                    .Include(s => s.Product.Color)
+                    .Include(s => s.Product.Type)
+                    .FirstOrDefault(s => s.Id == model.StorageId);
+
+                var product = context.Products
+                    .Include(p => p.Brand)
+                    .Include(p => p.Color)
+                    .Include(p => p.Type)
+                    .FirstOrDefault(p => p.Id == storage.Product.Id);
+
+                if (product is not null)
+                {
+                    product.Brand = context.Brands.FirstOrDefault(b => b.Id == model.BrandId);
+
+                    product.Color = context.ProductColors.FirstOrDefault(c => c.Id == model.ColorId);
+
+                    product.Type = context.ProductTypes.FirstOrDefault(t => t.Id == model.TypeId);
+
+                    product.Description = model.ProductDesc;
+
+                    product.Model = model.ProductModel;
+
+                    product.Price = model.Price;
+
+                }
+
+                if (storage is not null)
+                {
+                    storage.Count = model.Count;
+
+                    if (model.Size is not null) storage.Size = model.Size;
+
+                    storage.Product = product;
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteProductInStorage(int id)
+        {
+            using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
+            {
+                var storage = context.Storage
+                    .Include(s => s.Product)
+                    .Include(s => s.Product.Brand)
+                    .Include(s => s.Product.Color)
+                    .Include(s => s.Product.Type)
+                    .FirstOrDefault(s => s.Id == id);
+
+                context.Storage.Remove(storage);
+
+                context.SaveChanges();
+            }
+        }
     }
 }

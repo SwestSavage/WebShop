@@ -5,8 +5,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Каталог продуктов</h1>
 </div>
 
 
@@ -21,14 +20,22 @@
                     <h6 class="card-subtitle mb-2 text-muted">@p.Product.Color.Color</h6>
                     <h6 class="card-subtitle mb-2 text-muted">Размер: @p.Size</h6>
                     <h6 class="card-subtitle mb-2 text-muted">Цена: @p.Product.Price</h6>
-                    <p class="card-text">@p.Product.Description</p>
-                    @if (ViewData["LoggedIn"] is not null)
-                    {                        
-                        @using(Html.BeginForm("AddToCart", "Home", FormMethod.Get))
-                        {
-                            <input type="hidden" name="storageId" value="@p.Id"/>
-                            <input type="submit" class="btn btn-primary" value="Купить"/>
+                    <h6 class="card-subtitle mb-2 text-muted">Кол-во: @p.Count</h6>
+                    <p class="card-text">@p.Product.Description</p>                   
+                    @if (p.Count > 0)
+                    {
+                        @if (ViewData["LoggedIn"] is not null)
+                        {                        
+                            @using(Html.BeginForm("AddToCart", "Home", FormMethod.Get))
+                            {
+                                <input type="hidden" name="storageId" value="@p.Id"/>
+                                <input type="submit" class="btn btn-primary" value="Купить"/>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <h6 class="text-muted">Нет в наличии</h6>
                     }
                 </div>
             </div>

@@ -8,5 +8,9 @@ namespace WebShop.DbRepository.Interfaces
         public Storage GetById(int id);
 
         public void AddProductInStorage(ProductFromStorageViewModel model);
+
+        public void UpdateProductInStorage(ProductFromStorageViewModel model);
+
+        public void DeleteProductInStorage(int id);
     }
 }

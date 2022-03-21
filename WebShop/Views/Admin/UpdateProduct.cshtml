@@ -3,11 +3,14 @@
 @{
 }
 
-<form asp-action="AddProduct" asp-controller="Admin" method="post">
+<form asp-action="UpdateProduct" asp-controller="Admin" method="post">
     <div>
         <div>
+            <input type="hidden" asp-for="StorageId" value="@Model.StorageId"/>
+        </div>
+        <div>
             <label asp-for="ProductModel">Введите модель</label><br />
-            <input type="text" asp-for="ProductModel" />
+            <input type="text" asp-for="ProductModel" value="@Model.ProductModel"/>
             <span asp-validation-for="ProductModel" />
         </div>
         <div>
@@ -42,29 +45,27 @@
         </div>
         <div>
             <label asp-for="ProductDesc">Введите описание</label><br />
-            <input type="text" asp-for="ProductDesc" />
+            <input type="text" asp-for="ProductDesc" value="@Model.ProductDesc"/>
             <span asp-validation-for="ProductDesc" />
         </div>
         <div>
             <label asp-for="Price">Введите цену</label><br />
-            <input type="number" asp-for="Price" />
+            <input type="number" asp-for="Price" value="@Model.Price"/>
             <span asp-validation-for="Price" />
         </div>
         <div>
             <label asp-for="Size">Введите размер</label><br />
-            <input type="text" asp-for="Size" />
+            <input type="text" asp-for="Size" value="@Model.Size"/>
             <span asp-validation-for="Size" />
         </div>
         <div>
             <label asp-for="Count">Введите количество</label><br />
-            <input type="number" asp-for="Count" />
+            <input type="number" asp-for="Count" value="@Model.Count"/>
             <span asp-validation-for="Count" />
         </div>
         <div>
-                <input type="submit" value="Создать" class="btn btn-outline-dark"/>
+                <input type="submit" value="Обновить" class="btn btn-outline-dark"/>
         </div>
     </div>
 
 </form>
-
-
