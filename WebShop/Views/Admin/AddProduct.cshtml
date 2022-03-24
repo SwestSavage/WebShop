@@ -3,8 +3,13 @@
 @{
 }
 
-<form asp-action="AddProduct" asp-controller="Admin" method="post">
+<form asp-action="AddProduct" asp-controller="Admin" method="post" enctype="multipart/form-data">
     <div>
+        <div>
+            <label asp-for="UploadedFile">Загрузить картинку</label><br />
+            <input type="file" asp-for="UploadedFile" />
+            <span asp-validation-for="UploadedFile" />
+        </div>
         <div>
             <label asp-for="ProductModel">Введите модель</label><br />
             <input type="text" asp-for="ProductModel" />

@@ -28,7 +28,7 @@ namespace WebShop.DbRepository.Implementations
             return storage;
         }
 
-        public void AddProductInStorage(ProductFromStorageViewModel model)
+        public void AddProductInStorage(ProductFromStorageViewModel model, string imgPath)
         {
             using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
             {
@@ -39,7 +39,8 @@ namespace WebShop.DbRepository.Implementations
                     Color = context.ProductColors.FirstOrDefault(c => c.Id == model.ColorId),
                     Model = model.ProductModel,
                     Description = model.ProductDesc,
-                    Price = model.Price
+                    Price = model.Price,
+                    ImagePath = imgPath
                 }) ;
 
                 context.SaveChanges();
@@ -55,7 +56,7 @@ namespace WebShop.DbRepository.Implementations
             }
         }
 
-        public void UpdateProductInStorage(ProductFromStorageViewModel model)
+        public void UpdateProductInStorage(ProductFromStorageViewModel model, string imgPath)
         {
             using (var context = RepositoryContextFactory.CreateDbContext(ConnectionString))
             {
@@ -85,6 +86,8 @@ namespace WebShop.DbRepository.Implementations
                     product.Model = model.ProductModel;
 
                     product.Price = model.Price;
+
+                    product.ImagePath = imgPath;
 
                 }
 

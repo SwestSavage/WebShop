@@ -12,14 +12,17 @@ namespace WebShop.Controllers
         private IProductsRepository _productsRepository;
         private IProductInfoRepository _productInfoRepository;
         private IStorageRepository _storageRepository;
+        private readonly IWebHostEnvironment _appEnvironment;
 
         public AdminController(IProductsRepository productsRepository,
             IProductInfoRepository productInfoRepository,
-            IStorageRepository storageRepository)
-        { 
+            IStorageRepository storageRepository,
+            IWebHostEnvironment appEnvironment)
+        {
             _productsRepository = productsRepository;
             _productInfoRepository = productInfoRepository;
             _storageRepository = storageRepository;
+            _appEnvironment = appEnvironment;
         }
 
         [Authorize]
@@ -56,9 +59,21 @@ namespace WebShop.Controllers
         
         [Authorize]
         [HttpPost]
-        public ActionResult AddProduct(ProductFromStorageViewModel productStorage)
+        public async Task<IActionResult> AddProduct(ProductFromStorageViewModel productStorage)
         {
-            _storageRepository.AddProductInStorage(productStorage);
+            string? path = null;
+
+            if (productStorage.UploadedFile is not null)
+            {
+                path = "/Files/" + productStorage.UploadedFile.FileName;
+
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await productStorage.UploadedFile.CopyToAsync(fileStream);
+                }
+            }
+
+            _storageRepository.AddProductInStorage(productStorage, path);
 
             return RedirectToAction("AdminPage", "Admin");
         }
@@ -91,9 +106,21 @@ namespace WebShop.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult UpdateProduct(ProductFromStorageViewModel model)
+        public async Task<IActionResult> UpdateProduct(ProductFromStorageViewModel productStorage)
         {
-            _storageRepository.UpdateProductInStorage(model);
+            string? path = null;
+
+            if (productStorage.UploadedFile is not null)
+            {
+                path = "/Files/" + productStorage.UploadedFile.FileName;
+
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                {
+                    await productStorage.UploadedFile.CopyToAsync(fileStream);
+                }
+            }
+
+            _storageRepository.UpdateProductInStorage(productStorage, path);
 
             return RedirectToAction("AdminPage", "Admin");
         }

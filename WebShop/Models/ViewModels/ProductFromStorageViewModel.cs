@@ -11,5 +11,6 @@
         public decimal Price { get; set; }
         public string Size { get; set; }
         public int Count { get; set; }
+        public IFormFile UploadedFile { get; set; }
     }
 }
