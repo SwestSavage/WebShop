@@ -37,10 +37,47 @@
         </tbody>
     </table>
     <h3>Полная цена: @fullPrice</h3>
-    @using (Html.BeginForm("ConfirmOrder", "Cart", FormMethod.Post))
-    {
-        <input type="hidden" name="cartId" value="@Model.Id" />
-        <input type="hidden" name="fullSum" value="@fullPrice" />
-        <input type="submit" value="Оформить заказ" class="btn btn-primary"/>
-    }
+
+    <button class="btn btn-primary" id="modal-btn" data-toggle="modal" data-target="#Modal">Оформить зака</button>
+
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Вы уверены, что хотите оформить заказ?
+      </div>
+      <div class="modal-footer">
+        @using (Html.BeginForm("ConfirmOrder", "Cart", FormMethod.Post))
+        {
+            <input type="hidden" name="cartId" value="@Model.Id" />
+            <input type="hidden" name="fullSum" value="@fullPrice" />
+            <input type="submit" value="Оформить заказ" class="btn btn-primary"/>
+        }
+        <button type="button" id="btnHideModal" class="btn btn-secondary">  
+            Нет
+        </button>  
+      </div>
+    </div>
+  </div>
 </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">  
+</script> 
+ <script type="text/javascript">  
+        $(document).ready(function () {  
+            $("#modal-btn").click(function () {  
+                $("#Modal").modal('show');  
+            });  
+        });  
+
+        $("#btnHideModal").click(function () {  
+                $("#Modal").modal('hide');  
+            }); 
+ </script>  
