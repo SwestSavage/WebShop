@@ -7,5 +7,6 @@
         public int Count { get; set; }
         public decimal FullSum { get; set; }
         public Cart Cart { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

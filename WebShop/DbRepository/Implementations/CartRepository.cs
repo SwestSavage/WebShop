@@ -50,13 +50,13 @@ namespace WebShop.DbRepository.Implementations
                             .ThenInclude(p => p.Color)
                     .FirstOrDefaultAsync(c => c.Id == cartId);
 
-                cart.ProductsFromStorage.ForEach(p =>
-                {
-                    if (p.Count > 0)
-                    {
-                        p.Count--;
-                    }
-                });
+                //cart.ProductsFromStorage.ForEach(p =>
+                //{
+                //    if (p.Count > 0)
+                //    {
+                //        p.Count--;
+                //    }
+                //});
 
                 if (cart is not null)
                 {
@@ -65,7 +65,8 @@ namespace WebShop.DbRepository.Implementations
                         Date = DateTime.Now,
                         Count = cart.ProductsFromStorage.Count(),
                         FullSum = fullSum,
-                        Cart = cart
+                        Cart = cart,
+                        IsConfirmed = false
                     });
                 }
 

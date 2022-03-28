@@ -22,7 +22,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Каталог</a>
                         </li>                       
-                        @if(ViewData["LoggedIn"] is not null)
+                        @if(User.Identity.Name is not null)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
@@ -31,6 +31,12 @@
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Cart">Корзина - @ViewBag.ItemsInCart</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Orders">Заказы</a>
                                 </li>
                             }
                         }

@@ -13,16 +13,18 @@ namespace WebShop.Controllers
         private IProductInfoRepository _productInfoRepository;
         private IStorageRepository _storageRepository;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly IOrderRepository _orderRepository;
 
         public AdminController(IProductsRepository productsRepository,
             IProductInfoRepository productInfoRepository,
             IStorageRepository storageRepository,
-            IWebHostEnvironment appEnvironment)
+            IWebHostEnvironment appEnvironment, IOrderRepository orderRepository)
         {
             _productsRepository = productsRepository;
             _productInfoRepository = productInfoRepository;
             _storageRepository = storageRepository;
             _appEnvironment = appEnvironment;
+            _orderRepository = orderRepository;
         }
 
         [Authorize]
@@ -132,6 +134,24 @@ namespace WebShop.Controllers
             _storageRepository.DeleteProductInStorage(storageId);
 
             return RedirectToAction("AdminPage", "Admin");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Orders()
+        {
+            ViewBag.IsAdmin = true;
+
+            return View(await _orderRepository.GetAllOrdersAsync());
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOrder(int orderId)
+        {
+            await _orderRepository.ConfirmOrderByIdAsync(orderId);
+
+            return RedirectToAction("Orders", "Admin");
         }
     }
 }

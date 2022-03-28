@@ -1,0 +1,54 @@
+﻿@model IEnumerable<WebShop.Models.Order>
+@{
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Пользователь</th>
+            <th>Дата заказа</th>
+            <th>Полная цена</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Id</td>
+                <td>@o.Cart.User.Login</td>
+                <td>@o.Date.ToShortDateString()</td>
+                <td>@o.FullSum</td>
+                <td>@(o.IsConfirmed ? "Подтвержден" : "Не подтвержден")</td>
+                <td>
+                    @if (!o.IsConfirmed)
+                    {
+                        @using (Html.BeginForm("ConfirmOrder", "Admin", FormMethod.Post))
+                        {
+                            <input type="hidden" value="@o.Id" name="orderId"/>
+                            <input type="submit" value="Подтвердить заказ" />
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <table class="table mb-0">
+                        <tbody>
+                            @foreach (var p in o.Cart.ProductsFromStorage)
+                            {
+                                <tr>
+                                    <td>@p.Product.Model</td>
+                                    <td>@p.Product.Type.Title</td>
+                                    <td>@p.Product.Color.Color</td>
+                                    <td>@p.Product.Brand.Title</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
