@@ -16,7 +16,7 @@ namespace WebShop.Controllers
         }
 
         [Authorize]
-        public IActionResult Cart()
+        public async Task<IActionResult> Cart()
         {
             User user = HttpContext.Session.GetObject<User>("user");
 
@@ -30,6 +30,10 @@ namespace WebShop.Controllers
                 ViewBag.ItemsInCart = cart.ProductsFromStorage.Count();
 
                 return View(cart);
+            }
+            else
+            {
+                await _cartRepository.AddNewCartOfUser(user.Id);
             }
 
             return BadRequest();

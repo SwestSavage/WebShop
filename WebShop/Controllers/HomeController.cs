@@ -44,6 +44,10 @@ namespace WebShop.Controllers
                 {
                     ViewBag.ItemsInCart = cart.ProductsFromStorage.Count();
                 }
+                else
+                {
+                    await _cartRepository.AddNewCartOfUser(user.Id);
+                }
 
                 if (user.IsAdmin)
                 {                   
